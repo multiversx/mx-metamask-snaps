@@ -1,0 +1,1 @@
+# mx-metamask-snaps
