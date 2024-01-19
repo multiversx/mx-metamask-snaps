@@ -148,7 +148,7 @@ const Index = () => {
   return (
     <Container>
       <Heading>
-        Welcome to <Span>mvx-snap</Span>
+        Welcome to <Span>mvx-metamask-snaps</Span>
       </Heading>
       <CardContainer>
         {state.error && (

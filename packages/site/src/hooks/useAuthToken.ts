@@ -15,9 +15,11 @@ export const useAuthToken = () => {
       const token = data.get('token');
 
       if (typeof token === 'string') {
-        const response = (await authTokenSnap(token)) as string;
+        const tokenSigned = await authTokenSnap(token);
 
-        setAuthToken(response);
+        if (tokenSigned) {
+          setAuthToken(tokenSigned);
+        }
       }
     } catch (err: unknown) {
       console.log(`An unknown error occurred: ${JSON.stringify(err)}`);

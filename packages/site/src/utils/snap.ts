@@ -54,26 +54,11 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
 
 /**
- * Invoke the "mvx_signAuthToken" RPC method from the snap.
- */
-export const getTokenSnap = async (token: string) => {
-  return await window.ethereum.request({
-    method: 'wallet_invokeSnap',
-    params: {
-      snapId: defaultSnapOrigin,
-      request: {
-        method: 'mvx_signAuthToken',
-        params: { token: token },
-      },
-    },
-  });
-};
-
-/**
  * Invoke the "mvx_getAddress" RPC method from the snap.
+ * @returns public address
  */
 export const getAddressSnap = async () => {
-  return await window.ethereum.request({
+  return await window.ethereum.request<string>({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -86,17 +71,17 @@ export const getAddressSnap = async () => {
 };
 
 /**
- * Invoke the "mvx_makeTransaction" RPC method from the snap.
- *
- * @param params - The transaction.
+ * Invoke the "mvx_signTransactions" RPC method from the snap.
+ * Sign an array of transactions
+ * @param params - Transactions.
  */
-export const makeTransactionSnap = async (transactionToSend: Transaction) => {
+export const signTransactionsSnap = async (transactionToSend: Transaction) => {
   const trans = [transactionToSend];
   const transactionsPlain = trans.map((transaction) =>
     transaction.toPlainObject(),
   );
 
-  const metamaskReponse = (await window.ethereum.request({
+  const metamaskReponse = await window.ethereum.request<string[]>({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -105,13 +90,23 @@ export const makeTransactionSnap = async (transactionToSend: Transaction) => {
         params: { transactions: transactionsPlain },
       },
     },
-  })) as string[];
+  });
 
-  return metamaskReponse[0];
+  if (metamaskReponse) {
+    return metamaskReponse[0];
+  } else {
+    throw new Error('Error during the signing process');
+  }
 };
 
+/**
+ * Invoke the "mvx_signMessage" RPC method from the snap.
+ * Sign a message with Metamask
+ * @param message
+ * @returns
+ */
 export const signMessageSnap = async (message: string) => {
-  const metamaskReponse = await window.ethereum.request({
+  return await window.ethereum.request<string>({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
@@ -121,12 +116,16 @@ export const signMessageSnap = async (message: string) => {
       },
     },
   });
-
-  return metamaskReponse;
 };
 
+/**
+ * Invoke the "mvx_signAuthToken" RPC method from the snap.
+ * Sign an auth token with Metamask
+ * @param token
+ * @returns
+ */
 export const authTokenSnap = async (token: string) => {
-  const metamaskReponse = await window.ethereum.request({
+  const metamaskReponse = await window.ethereum.request<string>({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,

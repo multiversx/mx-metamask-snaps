@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getAddressSnap, makeTransactionSnap } from '../utils';
+import { getAddressSnap, signTransactionsSnap } from '../utils';
 import { Address, TokenTransfer, Transaction } from '@multiversx/sdk-core/out';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
 import { getNetwork } from '../utils/network';
@@ -45,7 +45,7 @@ export const useSendTransaction = () => {
               transaction = factory.createEGLDTransfer({
                 sender: Address.fromBech32(fromAddress),
                 receiver: Address.fromBech32(toAddress),
-                chainID: 'D',
+                chainID: network.chainId,
                 nonce: data.nonce,
                 value: TokenTransfer.egldFromAmount(amount),
               });
@@ -58,20 +58,25 @@ export const useSendTransaction = () => {
                 ),
                 sender: Address.fromBech32(fromAddress),
                 receiver: Address.fromBech32(toAddress),
-                chainID: 'D',
+                chainID: network.chainId,
                 nonce: data.nonce,
               });
             }
 
-            const response = await makeTransactionSnap(transaction);
-            const trans = Transaction.fromPlainObject(JSON.parse(response));
+            const transactionSigned = await signTransactionsSnap(transaction);
 
-            const apiNetworkProvider = new ApiNetworkProvider(
-              network.apiAddress,
-            );
+            if (transactionSigned) {
+              const trans = Transaction.fromPlainObject(
+                JSON.parse(transactionSigned),
+              );
 
-            let txHash = await apiNetworkProvider.sendTransaction(trans);
-            setLastTxId(txHash);
+              const apiNetworkProvider = new ApiNetworkProvider(
+                network.apiAddress,
+              );
+
+              let txHash = await apiNetworkProvider.sendTransaction(trans);
+              setLastTxId(txHash);
+            }
           })
           .catch((error) => console.error('Error fetching nonce:', error));
       }

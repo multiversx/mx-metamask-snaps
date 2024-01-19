@@ -16,7 +16,7 @@ export const getWalletKeys = async () => {
   const node = await SLIP10Node.fromJSON(rootNode);
 
   if (node.privateKeyBytes === undefined) {
-    throw new Error('Cannot retrieve the privat key');
+    throw new Error('Cannot retrieve the private key');
   }
 
   const userSecret = new UserSecretKey(node.privateKeyBytes as Uint8Array);

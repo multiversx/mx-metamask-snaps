@@ -9,32 +9,33 @@ export const useSignMessage = () => {
 
   const signMessage = async (data: FormData) => {
     if (isLoading) {
-        return;
-      }
+      return;
+    }
 
     try {
       setIsLoading(true);
       const textMessage = data.get('message');
 
-      if (typeof textMessage === 'string' ) {
-        
+      if (typeof textMessage === 'string') {
         const fromAddress = await getAddressSnap();
 
-        const message = new SignableMessage({
-            address : Address.fromBech32(fromAddress),
-            message : Buffer.from(textMessage, 'ascii')
-        });
+        if (fromAddress) {
+          const message = new SignableMessage({
+            address: Address.fromBech32(fromAddress),
+            message: Buffer.from(textMessage, 'ascii'),
+          });
 
-        const response = await signMessageSnap(textMessage) as string;
-        
-        const sign = new Signature(response);
-        
-        message.applySignature(sign);
+          const messageSigned = await signMessageSnap(textMessage);
 
-        setMessageSigned(JSON.stringify(message.toJSON()));
+          if (messageSigned) {
+            const sign = new Signature(messageSigned);
+            message.applySignature(sign);
+            setMessageSigned(JSON.stringify(message.toJSON()));
+          }
+        }
       }
     } catch (err: unknown) {
-      console.log((`An unknown error occurred: ${JSON.stringify(err)}`));
+      console.log(`An unknown error occurred: ${JSON.stringify(err)}`);
     } finally {
       setIsLoading(false);
     }
