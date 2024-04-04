@@ -1,0 +1,42 @@
+{
+  "version": "0.0.1",
+  "description": "Snap connector to MultiversX chain.",
+  "proposedName": "MultiversX",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/multiversx/mx-metamask-snaps.git"
+  },
+  "source": {
+    "shasum": "czdjsbpT7fbpDB+135jMApzf5k3psuRqpz4PUrNc7WA=",
+    "location": {
+      "npm": {
+        "filePath": "dist/bundle.js",
+        "iconPath": "images/icon.svg",
+        "packageName": "@multiversx/metamask-snap",
+        "registry": "https://registry.npmjs.org/"
+      }
+    }
+  },
+  "initialPermissions": {
+    "endowment:network-access": {},
+    "snap_dialog": {},
+    "endowment:rpc": {
+      "dapps": true,
+      "snaps": false
+    },
+    "snap_getBip32Entropy": [
+      {
+        "path": [
+          "m",
+          "44'",
+          "508'",
+          "0'",
+          "0'",
+          "0'"
+        ],
+        "curve": "ed25519"
+      }
+    ]
+  },
+  "manifestVersion": "0.1"
+}

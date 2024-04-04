@@ -1,0 +1,41 @@
+name: Publish sdk-metamask-snap-provider
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: publish-npm
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+
+      - name: Setup yarn
+        run: npm install -g yarn
+      
+      - name: Remove workspace json
+        run: rm -rf package.json
+
+      - name: Install dependencies
+        run: cd packages/mx-metamask-snaps && yarn install
+      
+      - name: Build
+        run: cd packages/mx-metamask-snaps && yarn build:package
+
+      - name: Publish to npmjs
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: cd packages/mx-metamask-snaps && npm publish --tag next
