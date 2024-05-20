@@ -26,6 +26,7 @@
     },
     "snap_getBip32Entropy": [
       {
+        "description": "This permissions allows MultiversX to manage accounts and assets across the ecosystem by deriving key pairs from secret recovery phrase. It allows signing messages and transactions, your secrets are safe and not revealed.",
         "path": [
           "m",
           "44'",
