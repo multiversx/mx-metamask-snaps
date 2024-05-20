@@ -11,7 +11,11 @@
     "url": "https://github.com/multiversx/mx-metamask-snaps.git"
   },
   "license": "MIT",
-  "author": "",
+  "author": {
+    "name": "MultiversX",
+    "email": "extensions@multiversx.com",
+    "url": "https://multiversx.com"
+  },
   "main": "src/index.ts",
   "files": [
     "dist/",
