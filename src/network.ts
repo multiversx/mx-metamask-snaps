@@ -15,7 +15,7 @@ export const getNetworkConfig = async (
     const json = await response.json();
     return NetworkConfig.fromHttpResponse(json.data.config);
   } catch (error) {
-    return undefined;
+    throw new Error('Failed to fetch network config');
   }
 };
 
