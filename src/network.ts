@@ -5,6 +5,10 @@ import { NetworkConfig } from '@multiversx/sdk-network-providers/out';
 export const getNetworkConfig = async (
   apiUrl: string,
 ): Promise<NetworkConfig | undefined> => {
+  if (!apiUrl.startsWith('https://')) {
+    throw new Error('Insecure connection protocol');
+  }
+  
   try {
     const response = await fetch(`${apiUrl}/network/config`);
 
