@@ -1,6 +1,5 @@
 import { SignTransactionsParams } from "./types/snapParam";
 import { IPlainTransactionObject, Transaction } from "@multiversx/sdk-core/out";
-import { getWalletKeys } from "./private-key";
 import { DECIMALS, DIGITS, EGLD_LOGO } from "./constants";
 import { getNetworkConfig, getNetworkType } from "./network";
 import { NetworkType } from "./types/networkType";
@@ -16,6 +15,7 @@ import {
   RowVariant,
 } from "@metamask/snaps-sdk";
 import { formatAmount } from "./operations";
+import { KeyOps } from "./operations/KeyOps";
 
 /**
  * @param params - The transaction(s) to sign.
@@ -23,8 +23,6 @@ import { formatAmount } from "./operations";
 export const signTransactions = async (
   transactionsParam: SignTransactionsParams
 ): Promise<string[]> => {
-  const { userSecret } = await getWalletKeys();
-
   if (transactionsParam.transactions.length == 0) {
     throw new Error("There must be atleast one transaction");
   }
@@ -54,7 +52,6 @@ export const signTransactions = async (
       transaction,
       networkType,
       networkConfig,
-      userSecret,
       transactionsSigned
     );
   }
@@ -65,9 +62,9 @@ export const signTransactions = async (
     transaction: Transaction,
     networkType: NetworkType,
     networkConfig: NetworkConfig,
-    userSecret: UserSecretKey,
     transactionsSigned: string[]
   ) {
+    const keyOps = new KeyOps();
     const txValue = formatEGLD(
       transaction.getValue().toString(),
       networkType.egldLabel
@@ -86,7 +83,9 @@ export const signTransactions = async (
     }
 
     const serializedTransaction = transaction.serializeForSigning();
-    const transactionSignature = userSecret.sign(serializedTransaction);
+    const transactionSignature = await keyOps.getTransactionSignature(
+      serializedTransaction
+    );
     transaction.applySignature(transactionSignature);
 
     transactionsSigned.push(JSON.stringify(transaction.toPlainObject()));

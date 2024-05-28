@@ -1,38 +1,38 @@
-import { SignableMessage } from '@multiversx/sdk-core/out';
-import { SignMessageParams } from './types/snapParam';
-import { panel, text, copyable, heading, divider } from '@metamask/snaps-sdk';
-import { getWalletKeys } from './private-key';
+import { SignableMessage } from "@multiversx/sdk-core/out";
+import { SignMessageParams } from "./types/snapParam";
+import { panel, text, copyable, heading, divider } from "@metamask/snaps-sdk";
+import { KeyOps } from "./operations/KeyOps";
 
 /**
  * @param messageParam - The message to sign.
  */
 export const signMessage = async (
-  messageParam: SignMessageParams,
+  messageParam: SignMessageParams
 ): Promise<string> => {
-  const { userSecret } = await getWalletKeys();
+  const keyOps = new KeyOps();
 
   const signableMessage = new SignableMessage({
-    message: Buffer.from(messageParam.message, 'ascii'),
+    message: Buffer.from(messageParam.message, "ascii"),
   });
 
   const confirmationResponse = await snap.request({
-    method: 'snap_dialog',
+    method: "snap_dialog",
     params: {
-      type: 'confirmation',
+      type: "confirmation",
       content: panel([
-        heading('Message signing'),
+        heading("Message signing"),
         divider(),
-        text('Message'),
+        text("Message"),
         copyable(messageParam.message),
       ]),
     },
   });
 
   if (confirmationResponse !== true) {
-    throw new Error('Message must be signed by the user');
+    throw new Error("Message must be signed by the user");
   }
 
   const serializedMessage = signableMessage.serializeForSigning();
 
-  return userSecret.sign(serializedMessage).toString('hex');
+  return keyOps.getMessageSignature(serializedMessage);
 };
