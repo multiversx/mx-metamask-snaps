@@ -39,7 +39,9 @@
     "@multiversx/sdk-core": "13.1.0",
     "@multiversx/sdk-network-providers": "2.2.1",
     "@multiversx/sdk-wallet": "4.3.0",
-    "buffer": "6.0.3"
+    "bignumber.js": "^9.1.2",
+    "buffer": "6.0.3",
+    "protobufjs": "7.3.0"
   },
   "devDependencies": {
     "@jest/globals": "29.5.0",
