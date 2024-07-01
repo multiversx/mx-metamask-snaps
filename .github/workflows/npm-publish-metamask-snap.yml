@@ -25,17 +25,14 @@ jobs:
 
       - name: Setup yarn
         run: npm install -g yarn
-      
-      - name: Remove workspace json
-        run: rm -rf package.json
 
       - name: Install dependencies
-        run: cd packages/mx-metamask-snaps && yarn install
+        run:  yarn install
       
       - name: Build
-        run: cd packages/mx-metamask-snaps && yarn build:package
+        run:  yarn build:package
 
       - name: Publish to npmjs
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        run: cd packages/mx-metamask-snaps && npm publish --tag next
+        run:  npm publish
