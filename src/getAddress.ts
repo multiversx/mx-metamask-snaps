@@ -1,10 +1,9 @@
-import { getWalletKeys } from './private-key';
+import { KeyOps } from "./operations/KeyOps";
 
 /**
  * This wallet uses a single account/address.
  */
 export const getAddress = async (): Promise<string> => {
-  const { publicKey } = await getWalletKeys();
-
-  return publicKey;
+  const keyOps = new KeyOps();
+  return await keyOps.getPublicKey();
 };

@@ -1,46 +1,47 @@
-import { Address, SignableMessage } from '@multiversx/sdk-core';
-import { SignAuthTokenParams } from './types/snapParam';
-import { getWalletKeys } from './private-key';
-import { panel, text, copyable, heading } from '@metamask/snaps-sdk';
+import { Address, SignableMessage } from "@multiversx/sdk-core";
+import { SignAuthTokenParams } from "./types/snapParam";
+import { panel, text, copyable, heading } from "@metamask/snaps-sdk";
+import { KeyOps } from "./operations/KeyOps";
 
 /**
  * @param tokenParam - The token to sign.
  */
 export const signAuthToken = async (
   origin: string,
-  tokenParam: SignAuthTokenParams,
+  tokenParam: SignAuthTokenParams
 ): Promise<string> => {
-  const { userSecret, publicKey } = await getWalletKeys();
+  const keyOps = new KeyOps();
+  const publicKey = await keyOps.getPublicKey();
 
   const confirmationResponse = await snap.request({
-    method: 'snap_dialog',
+    method: "snap_dialog",
     params: {
-      type: 'confirmation',
+      type: "confirmation",
       content: panel([
-        heading('Connect to:'),
+        heading("Connect to:"),
         text(origin),
-        heading('Scam/phising verification'),
+        heading("Scam/phising verification"),
         copyable(
           "Double check the browser's address bar and confirm that you are indeed connecting to " +
-            origin,
+            origin
         ),
       ]),
     },
   });
 
   if (confirmationResponse !== true) {
-    throw new Error('Token must be signed by the user');
+    throw new Error("Token must be signed by the user");
   }
 
   const signableMessage = new SignableMessage({
     address: new Address(publicKey),
-    message: Buffer.from(`${publicKey}${tokenParam.token}`, 'utf8'),
+    message: Buffer.from(`${publicKey}${tokenParam.token}`, "utf8"),
   });
 
   const cryptoMessage = Buffer.from(
-    signableMessage.serializeForSigning().toString('hex'),
-    'hex',
+    signableMessage.serializeForSigning().toString("hex"),
+    "hex"
   );
 
-  return userSecret.sign(cryptoMessage).toString('hex');
+  return await keyOps.getMessageSignature(cryptoMessage);
 };
