@@ -3,6 +3,8 @@ import { SignAuthTokenParams } from "./types/snapParam";
 import { panel, text, copyable, heading } from "@metamask/snaps-sdk";
 import { KeyOps } from "./operations/KeyOps";
 
+const allowedDomain = "multiversx.com";
+
 /**
  * @param tokenParam - The token to sign.
  */
@@ -13,6 +15,22 @@ export const signAuthToken = async (
   const keyOps = new KeyOps();
   const publicKey = await keyOps.getPublicKey();
 
+  const originNotAllowed = !origin.endsWith(allowedDomain);
+
+  if (originNotAllowed) {
+    await snap.request({
+      method: "snap_dialog",
+      params: {
+        type: "alert",
+        content: panel([
+          heading("Error:"),
+          text(`Origin ${origin} is not allowed.`),
+        ]),
+      },
+    });
+
+    throw new Error("Token must be signed by the user");
+  }
   const confirmationResponse = await snap.request({
     method: "snap_dialog",
     params: {
