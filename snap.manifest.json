@@ -1,13 +1,13 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Snap connector to MultiversX chain.",
   "proposedName": "MultiversX",
   "repository": {
     "type": "git",
-    "url": "https://github.com/multiversx/mx-metamask-snaps.git"
+    "url": "git+https://github.com/multiversx/mx-metamask-snaps.git"
   },
   "source": {
-    "shasum": "TEKJTrVLvmbYbPuyr7iSInirA5A9CNqvy/0lQwTRB3I=",
+    "shasum": "mlWGyqeOgzYwnAsDYlSptuZX0GJHH+idXVA9rvuDnRI=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -27,7 +27,14 @@
     "snap_getBip32Entropy": [
       {
         "description": "This permissions allows MultiversX to manage accounts and assets across the ecosystem by deriving key pairs from secret recovery phrase. It allows signing messages and transactions, your secrets are safe and not revealed.",
-        "path": ["m", "44'", "508'", "0'", "0'", "0'"],
+        "path": [
+          "m",
+          "44'",
+          "508'",
+          "0'",
+          "0'",
+          "0'"
+        ],
         "curve": "ed25519"
       }
     ]

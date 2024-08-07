@@ -1,6 +1,6 @@
 {
   "name": "@multiversx/metamask-snap",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Snap connector to MultiversX chain.",
   "keywords": [],
   "bugs": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/multiversx/mx-metamask-snaps.git"
+    "url": "git+https://github.com/multiversx/mx-metamask-snaps.git"
   },
   "license": "MIT",
   "author": {
