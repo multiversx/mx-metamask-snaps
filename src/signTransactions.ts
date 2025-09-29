@@ -1,10 +1,13 @@
 import { SignTransactionsParams } from "./types/snapParam";
-import { IPlainTransactionObject, Transaction } from "@multiversx/sdk-core/out";
+import {
+  INetworkConfig,
+  IPlainTransactionObject,
+  Transaction,
+  TransactionComputer,
+} from "@multiversx/sdk-core";
 import { DECIMALS, DIGITS, EGLD_LOGO } from "./constants";
 import { getNetworkConfig, getNetworkType } from "./network";
 import { NetworkType } from "./types/networkType";
-import { NetworkConfig } from "@multiversx/sdk-network-providers/out";
-import { UserSecretKey } from "@multiversx/sdk-wallet/out";
 import {
   divider,
   image,
@@ -46,7 +49,7 @@ export const signTransactions = async (
 
   const transactionsSigned: string[] = [];
   for (const transactionPlain of transactionsParam.transactions) {
-    const transaction = Transaction.fromPlainObject(transactionPlain);
+    const transaction = Transaction.newFromPlainObject(transactionPlain);
 
     await processTransaction(
       transaction,
@@ -61,15 +64,21 @@ export const signTransactions = async (
   async function processTransaction(
     transaction: Transaction,
     networkType: NetworkType,
-    networkConfig: NetworkConfig,
+    networkConfig: INetworkConfig,
     transactionsSigned: string[]
   ) {
     const keyOps = new KeyOps();
+
     const txValue = formatEGLD(
-      transaction.getValue().toString(),
+      transaction.value.toString() ?? "",
       networkType.egldLabel
     );
-    const fees = transaction.computeFee(networkConfig).toString();
+
+    const txComputer = new TransactionComputer();
+    const fees = txComputer
+      .computeTransactionFee(transaction, networkConfig)
+      .toString();
+
     const txFees = formatEGLD(fees, networkType.egldLabel);
 
     const confirmationResponse = await showConfirmationDialog(
@@ -82,12 +91,15 @@ export const signTransactions = async (
       throw new Error("All transactions must be approved by the user");
     }
 
-    const serializedTransaction = transaction.serializeForSigning();
+    const serializedTransaction = txComputer.computeBytesForSigning(
+      transaction
+    );
+
     const transactionSignature = await keyOps.getTransactionSignature(
       serializedTransaction
     );
-    transaction.applySignature(transactionSignature);
 
+    transaction.signature = transactionSignature;
     transactionsSigned.push(JSON.stringify(transaction.toPlainObject()));
   }
 
@@ -96,13 +108,16 @@ export const signTransactions = async (
     txValue: string,
     txFees: string
   ): Promise<string | boolean | null> {
+    const plainTx = transaction.toPlainObject();
+
+    console.log("PLAINTX", plainTx);
     return snap.request({
       method: "snap_dialog",
       params: {
         type: "confirmation",
         content: panel([
           text("Send to"),
-          text(transaction.getReceiver().bech32()),
+          text(plainTx.receiver),
           divider(),
           text("Amount"),
           row(txValue, image(EGLD_LOGO), RowVariant.Default),
@@ -111,7 +126,7 @@ export const signTransactions = async (
           row(txFees, image(EGLD_LOGO), RowVariant.Default),
           divider(),
           text("Data"),
-          copyable(transaction.getData().toString()),
+          copyable(plainTx.data ? atob(plainTx.data) : ""),
         ]),
       },
     });

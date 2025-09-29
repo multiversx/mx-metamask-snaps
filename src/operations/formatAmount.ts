@@ -1,4 +1,4 @@
-import { TokenTransfer } from "@multiversx/sdk-core";
+import { Token, TokenTransfer } from "@multiversx/sdk-core";
 import BigNumber from "bignumber.js";
 import { pipe } from "./pipe";
 import { DECIMALS, DIGITS, ZERO } from "../constants";
@@ -38,13 +38,18 @@ export function formatAmount({
   }
 
   return (
-    pipe(modInput as string)
+    pipe(modInput)
       // format
-      .then(() =>
-        TokenTransfer.fungibleFromBigInteger("", modInput as string, decimals)
-          .amountAsBigInteger.shiftedBy(-decimals)
-          .toFixed(decimals)
-      )
+      .then(() => {
+        const token = new Token({ identifier: "" });
+        const amount = new TokenTransfer({
+          token,
+          amount: BigInt(modInput),
+        }).toString();
+
+        const bigAmount = new BigNumber(amount);
+        return bigAmount.shiftedBy(-decimals).toFixed(decimals);
+      })
 
       // format
       .then((current) => {

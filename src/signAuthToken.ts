@@ -1,4 +1,4 @@
-import { Address, SignableMessage } from "@multiversx/sdk-core";
+import { Address, Message, MessageComputer } from "@multiversx/sdk-core";
 import { SignAuthTokenParams } from "./types/snapParam";
 import { panel, text, copyable, heading } from "@metamask/snaps-sdk";
 import { KeyOps } from "./operations/KeyOps";
@@ -33,15 +33,13 @@ export const signAuthToken = async (
     throw new Error("Token must be signed by the user");
   }
 
-  const signableMessage = new SignableMessage({
+  const msg = new Message({
     address: new Address(publicKey),
-    message: Buffer.from(`${publicKey}${tokenParam.token}`, "utf8"),
+    data: new Uint8Array(Buffer.from(`${publicKey}${tokenParam.token}`)),
   });
 
-  const cryptoMessage = Buffer.from(
-    signableMessage.serializeForSigning().toString("hex"),
-    "hex"
-  );
+  const messageComputer = new MessageComputer();
+  const cryptoMessage = messageComputer.computeBytesForSigning(msg);
 
-  return await keyOps.getMessageSignature(cryptoMessage);
+  return keyOps.getMessageSignature(cryptoMessage);
 };

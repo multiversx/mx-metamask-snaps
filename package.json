@@ -36,9 +36,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@multiversx/sdk-core": "13.1.0",
-    "@multiversx/sdk-network-providers": "2.2.1",
-    "@multiversx/sdk-wallet": "4.3.0",
+    "@multiversx/sdk-core": "15.2.0",
+    "@multiversx/sdk-network-providers": "2.9.3",
     "bignumber.js": "^9.1.2",
     "buffer": "6.0.3",
     "protobufjs": "7.3.0"

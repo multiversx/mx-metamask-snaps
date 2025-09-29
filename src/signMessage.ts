@@ -1,4 +1,4 @@
-import { SignableMessage } from "@multiversx/sdk-core/out";
+import { Message, MessageComputer } from "@multiversx/sdk-core";
 import { SignMessageParams } from "./types/snapParam";
 import { panel, text, copyable, heading, divider } from "@metamask/snaps-sdk";
 import { KeyOps } from "./operations/KeyOps";
@@ -11,8 +11,8 @@ export const signMessage = async (
 ): Promise<string> => {
   const keyOps = new KeyOps();
 
-  const signableMessage = new SignableMessage({
-    message: Buffer.from(messageParam.message, "ascii"),
+  const signableMessage = new Message({
+    data: new Uint8Array(Buffer.from(messageParam.message)),
   });
 
   const confirmationResponse = await snap.request({
@@ -32,7 +32,8 @@ export const signMessage = async (
     throw new Error("Message must be signed by the user");
   }
 
-  const serializedMessage = signableMessage.serializeForSigning();
+  const messageComputer = new MessageComputer();
+  const cryptoMessage = messageComputer.computeBytesForSigning(signableMessage);
 
-  return keyOps.getMessageSignature(serializedMessage);
+  return keyOps.getMessageSignature(cryptoMessage);
 };
