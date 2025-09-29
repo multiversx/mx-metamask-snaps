@@ -1,10 +1,11 @@
 import { SignTransactionsParams } from "./types/snapParam";
-import {
+import type {
   INetworkConfig,
   IPlainTransactionObject,
-  Transaction,
-  TransactionComputer,
-} from "@multiversx/sdk-core";
+} from "@multiversx/sdk-core/out/core/interfaces";
+import { Transaction } from "@multiversx/sdk-core/out/core/transaction";
+import { TransactionComputer } from "@multiversx/sdk-core/out/core/transactionComputer";
+
 import { DECIMALS, DIGITS, EGLD_LOGO } from "./constants";
 import { getNetworkConfig, getNetworkType } from "./network";
 import { NetworkType } from "./types/networkType";

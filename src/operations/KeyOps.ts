@@ -1,5 +1,5 @@
 import { SLIP10Node, JsonSLIP10Node } from "@metamask/key-tree";
-import { UserSecretKey } from "@multiversx/sdk-core/out";
+import { UserSecretKey } from "@multiversx/sdk-core/out/wallet/userKeys";
 
 export class KeyOps {
   /**

@@ -1,4 +1,8 @@
-import { Address, Message, MessageComputer } from "@multiversx/sdk-core";
+import {
+  Message,
+  MessageComputer,
+} from "@multiversx/sdk-core/out/core/message";
+import { Address } from "@multiversx/sdk-core/out/core/address";
 import { SignAuthTokenParams } from "./types/snapParam";
 import { panel, text, copyable, heading } from "@metamask/snaps-sdk";
 import { KeyOps } from "./operations/KeyOps";

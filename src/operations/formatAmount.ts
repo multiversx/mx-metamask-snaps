@@ -1,4 +1,4 @@
-import { Token, TokenTransfer } from "@multiversx/sdk-core";
+import { Token, TokenTransfer } from "@multiversx/sdk-core/out/core/tokens";
 import BigNumber from "bignumber.js";
 import { pipe } from "./pipe";
 import { DECIMALS, DIGITS, ZERO } from "../constants";

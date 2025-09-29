@@ -1,6 +1,7 @@
 import { NetworkType } from "./types/networkType";
 import { networks } from "./constants";
-import { ApiNetworkProvider, INetworkConfig } from "@multiversx/sdk-core/out";
+import type { INetworkConfig } from "@multiversx/sdk-core/out/core/interfaces";
+import { ApiNetworkProvider } from "@multiversx/sdk-core/out/networkProviders/apiNetworkProvider";
 
 export const getNetworkConfig = async (
   apiUrl: string

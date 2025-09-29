@@ -1,17 +1,13 @@
-import { IPlainTransactionObject } from "@multiversx/sdk-core/out";
+import type { IPlainTransactionObject } from "@multiversx/sdk-core/out/core/interfaces";
 
-
-export interface SignTransactionsParams
-{
+export interface SignTransactionsParams {
   transactions: IPlainTransactionObject[];
 }
 
-export interface SignMessageParams
-{
+export interface SignMessageParams {
   message: string;
 }
 
-export interface SignAuthTokenParams
-{
+export interface SignAuthTokenParams {
   token: string;
 }
