@@ -6,19 +6,18 @@ import type {
 import { Transaction } from "@multiversx/sdk-core/out/core/transaction";
 import { TransactionComputer } from "@multiversx/sdk-core/out/core/transactionComputer";
 
-import { DECIMALS, DIGITS, EGLD_LOGO } from "./constants";
-import { getNetworkConfig, getNetworkType } from "./network";
+import { DECIMALS, DIGITS } from "./constants";
+import { getNetworkProvider, getNetworkType } from "./network";
 import { NetworkType } from "./types/networkType";
 import { KeyOps } from "./operations/KeyOps";
 import { formatAmount } from "./operations";
+
+import { getMultiEsdtTransferData } from "./helpers/getMultiEsdtTransferData";
+import { TransactionsSummary } from "./TransactionsSummary";
 import {
-  Box,
-  Text,
-  Divider,
-  Copyable,
-  Image,
-  Section,
-} from "@metamask/snaps-sdk/jsx";
+  MultiSignTransactionType,
+  TransactionDataTokenType,
+} from "./types/transactions.types";
 
 /**
  * @param params - The transaction(s) to sign.
@@ -41,7 +40,9 @@ export const signTransactions = async (
     throw new Error(`Cannot identify the network with chainId ${chainId}.`);
   }
 
-  const networkConfig = await getNetworkConfig(networkType.apiAddress);
+  const networkProvider = getNetworkProvider(networkType.apiAddress);
+  const networkConfig = await networkProvider.getNetworkConfig();
+
   if (!networkConfig) {
     throw new Error("Cannot retrieve the network configuration from the API.");
   }
@@ -69,11 +70,6 @@ export const signTransactions = async (
   ) {
     const keyOps = new KeyOps();
 
-    const txValue = formatEGLD(
-      transaction.value.toString() ?? "",
-      networkType.egldLabel
-    );
-
     const txComputer = new TransactionComputer();
     const fees = txComputer
       .computeTransactionFee(transaction, networkConfig)
@@ -81,9 +77,16 @@ export const signTransactions = async (
 
     const txFees = formatEGLD(fees, networkType.egldLabel);
 
+    const {
+      allTransactions,
+      parsedTransactionsByDataField,
+    } = getMultiEsdtTransferData([transaction]);
+
+    console.log({ allTransactions, parsedTransactionsByDataField });
+
     const confirmationResponse = await showConfirmationDialog(
-      transaction,
-      txValue,
+      allTransactions,
+      parsedTransactionsByDataField,
       txFees
     );
 
@@ -104,45 +107,52 @@ export const signTransactions = async (
   }
 
   async function showConfirmationDialog(
-    transaction: Transaction,
-    txValue: string,
+    transactions: MultiSignTransactionType[],
+    parsedTransactionsByDataField: Record<string, TransactionDataTokenType>,
     txFees: string
   ) {
-    const plainTx = transaction.toPlainObject();
+    if (!networkType) {
+      throw new Error(`Cannot identify the network with chainId ${chainId}.`);
+    }
+
+    const tokenDetails = await getTokenDetails(parsedTransactionsByDataField);
 
     return snap.request({
       method: "snap_dialog",
       params: {
         type: "confirmation",
-        content: (
-          <Box>
-            <Text>Send to</Text>
-            <Text>{plainTx.receiver}</Text>
-            <Divider />
-
-            <Text>Amount</Text>
-            <Section direction="horizontal" alignment="space-between">
-              <Text>{txValue}</Text>
-              <Image src={EGLD_LOGO} alt="EGLD Logo" />
-            </Section>
-
-            <Divider />
-
-            <Text>Fee</Text>
-
-            <Section direction="horizontal" alignment="space-between">
-              <Text>{txFees}</Text>
-              <Image src={EGLD_LOGO} alt="EGLD Logo" />
-            </Section>
-
-            <Divider />
-
-            <Text>Data</Text>
-            <Copyable value={plainTx.data ? atob(plainTx.data) : ""} />
-          </Box>
-        ),
+        content: TransactionsSummary({
+          transactions,
+          parsedTransactionsByDataField,
+          fees: txFees,
+          networkType,
+          networkProvider,
+          tokenDetails,
+        }),
       },
     });
+  }
+
+  async function getTokenDetails(
+    parsedTransactions: Record<string, TransactionDataTokenType>
+  ) {
+    const tokenDetails: Record<string, any> = {};
+
+    for (const [key, value] of Object.entries(parsedTransactions)) {
+      if (value.tokenId) {
+        const tokenData = await networkProvider.getDefinitionOfFungibleToken(
+          value.tokenId
+        );
+
+        tokenDetails[key] = {
+          decimals: tokenData.decimals,
+          name: tokenData.name,
+          identifier: tokenData.identifier,
+        };
+      }
+    }
+
+    return tokenDetails;
   }
 
   function validateSameChainId(
@@ -155,7 +165,6 @@ export const signTransactions = async (
   function formatEGLD(input: string, ticker: string) {
     return formatAmount({
       input,
-      ticker,
       decimals: DECIMALS,
       digits: DIGITS,
     });
