@@ -6,9 +6,7 @@ import type {
 import { Transaction } from "@multiversx/sdk-core/out/core/transaction";
 import { TransactionComputer } from "@multiversx/sdk-core/out/core/transactionComputer";
 
-import { DECIMALS, DIGITS } from "./constants";
 import { getNetworkProvider, getNetworkType } from "./network";
-import { NetworkType } from "./types/networkType";
 import { KeyOps } from "./operations/KeyOps";
 import { formatAmount } from "./operations";
 
@@ -52,19 +50,13 @@ export const signTransactions = async (
   for (const transactionPlain of transactionsParam.transactions) {
     const transaction = Transaction.newFromPlainObject(transactionPlain);
 
-    await processTransaction(
-      transaction,
-      networkType,
-      networkConfig,
-      transactionsSigned
-    );
+    await processTransaction(transaction, networkConfig, transactionsSigned);
   }
 
   return transactionsSigned;
 
   async function processTransaction(
     transaction: Transaction,
-    networkType: NetworkType,
     networkConfig: INetworkConfig,
     transactionsSigned: string[]
   ) {
@@ -75,14 +67,15 @@ export const signTransactions = async (
       .computeTransactionFee(transaction, networkConfig)
       .toString();
 
-    const txFees = formatEGLD(fees, networkType.egldLabel);
+    const txFees = formatAmount({
+      input: fees,
+      showLastNonZeroDecimal: true,
+    });
 
     const {
       allTransactions,
       parsedTransactionsByDataField,
     } = getMultiEsdtTransferData([transaction]);
-
-    console.log({ allTransactions, parsedTransactionsByDataField });
 
     const confirmationResponse = await showConfirmationDialog(
       allTransactions,
@@ -160,13 +153,5 @@ export const signTransactions = async (
     targetChainId: string
   ): boolean {
     return transactions.every((tx) => tx.chainID === targetChainId);
-  }
-
-  function formatEGLD(input: string, ticker: string) {
-    return formatAmount({
-      input,
-      decimals: DECIMALS,
-      digits: DIGITS,
-    });
   }
 };
