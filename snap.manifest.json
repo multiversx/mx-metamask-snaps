@@ -7,7 +7,7 @@
     "url": "https://github.com/multiversx/mx-metamask-snaps.git"
   },
   "source": {
-    "shasum": "7zUoQrznw9oDxRf5xEZKcG9sLr0qZXqeSwq3lY4QKUs=",
+    "shasum": "0/nI0SkNZosMtotda3K6uMVyh8Apkq3Z14SF5i909Ec=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -27,17 +27,11 @@
     "snap_getBip32Entropy": [
       {
         "description": "This permissions allows MultiversX to manage accounts and assets across the ecosystem by deriving key pairs from secret recovery phrase. It allows signing messages and transactions, your secrets are safe and not revealed.",
-        "path": [
-          "m",
-          "44'",
-          "508'",
-          "0'",
-          "0'",
-          "0'"
-        ],
+        "path": ["m", "44'", "508'", "0'", "0'", "0'"],
         "curve": "ed25519"
       }
     ]
   },
+  "platformVersion": "9.3.0",
   "manifestVersion": "0.1"
 }

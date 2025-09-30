@@ -3,8 +3,8 @@ import {
   MessageComputer,
 } from "@multiversx/sdk-core/out/core/message";
 import { SignMessageParams } from "./types/snapParam";
-import { panel, text, copyable, heading, divider } from "@metamask/snaps-sdk";
 import { KeyOps } from "./operations/KeyOps";
+import { Box, Heading, Text, Copyable, Divider } from "@metamask/snaps-sdk/jsx";
 
 /**
  * @param messageParam - The message to sign.
@@ -22,12 +22,14 @@ export const signMessage = async (
     method: "snap_dialog",
     params: {
       type: "confirmation",
-      content: panel([
-        heading("Message signing"),
-        divider(),
-        text("Message"),
-        copyable(messageParam.message),
-      ]),
+      content: (
+        <Box>
+          <Heading>Message signing</Heading>
+          <Divider />
+          <Text>Message</Text>
+          <Copyable value={messageParam.message} />
+        </Box>
+      ),
     },
   });
 

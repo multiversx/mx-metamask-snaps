@@ -9,17 +9,16 @@ import { TransactionComputer } from "@multiversx/sdk-core/out/core/transactionCo
 import { DECIMALS, DIGITS, EGLD_LOGO } from "./constants";
 import { getNetworkConfig, getNetworkType } from "./network";
 import { NetworkType } from "./types/networkType";
-import {
-  divider,
-  image,
-  panel,
-  row,
-  text,
-  copyable,
-  RowVariant,
-} from "@metamask/snaps-sdk";
-import { formatAmount } from "./operations";
 import { KeyOps } from "./operations/KeyOps";
+import { formatAmount } from "./operations";
+import {
+  Box,
+  Text,
+  Divider,
+  Copyable,
+  Image,
+  Section,
+} from "@metamask/snaps-sdk/jsx";
 
 /**
  * @param params - The transaction(s) to sign.
@@ -27,28 +26,28 @@ import { KeyOps } from "./operations/KeyOps";
 export const signTransactions = async (
   transactionsParam: SignTransactionsParams
 ): Promise<string[]> => {
-  if (transactionsParam.transactions.length == 0) {
-    throw new Error("There must be atleast one transaction");
-  }
+  const chainId = transactionsParam.transactions[0]?.chainID;
 
-  const chainId = transactionsParam.transactions[0].chainID;
+  if (!chainId) {
+    throw new Error("There must be at least one transaction");
+  }
 
   if (!validateSameChainId(transactionsParam.transactions, chainId)) {
     throw new Error("All transactions must have the same chainId.");
   }
 
   const networkType = getNetworkType(chainId);
-
   if (!networkType) {
     throw new Error(`Cannot identify the network with chainId ${chainId}.`);
   }
 
   const networkConfig = await getNetworkConfig(networkType.apiAddress);
   if (!networkConfig) {
-    throw new Error("Cannot retrieve the network configuration from the api.");
+    throw new Error("Cannot retrieve the network configuration from the API.");
   }
 
   const transactionsSigned: string[] = [];
+
   for (const transactionPlain of transactionsParam.transactions) {
     const transaction = Transaction.newFromPlainObject(transactionPlain);
 
@@ -108,27 +107,40 @@ export const signTransactions = async (
     transaction: Transaction,
     txValue: string,
     txFees: string
-  ): Promise<string | boolean | null> {
+  ) {
     const plainTx = transaction.toPlainObject();
 
-    console.log("PLAINTX", plainTx);
     return snap.request({
       method: "snap_dialog",
       params: {
         type: "confirmation",
-        content: panel([
-          text("Send to"),
-          text(plainTx.receiver),
-          divider(),
-          text("Amount"),
-          row(txValue, image(EGLD_LOGO), RowVariant.Default),
-          divider(),
-          text("Fee"),
-          row(txFees, image(EGLD_LOGO), RowVariant.Default),
-          divider(),
-          text("Data"),
-          copyable(plainTx.data ? atob(plainTx.data) : ""),
-        ]),
+        content: (
+          <Box>
+            <Text>Send to</Text>
+            <Text>{plainTx.receiver}</Text>
+            <Divider />
+
+            <Text>Amount</Text>
+            <Section direction="horizontal" alignment="space-between">
+              <Text>{txValue}</Text>
+              <Image src={EGLD_LOGO} alt="EGLD Logo" />
+            </Section>
+
+            <Divider />
+
+            <Text>Fee</Text>
+
+            <Section direction="horizontal" alignment="space-between">
+              <Text>{txFees}</Text>
+              <Image src={EGLD_LOGO} alt="EGLD Logo" />
+            </Section>
+
+            <Divider />
+
+            <Text>Data</Text>
+            <Copyable value={plainTx.data ? atob(plainTx.data) : ""} />
+          </Box>
+        ),
       },
     });
   }
@@ -137,15 +149,13 @@ export const signTransactions = async (
     transactions: IPlainTransactionObject[],
     targetChainId: string
   ): boolean {
-    return transactions.every(
-      (transaction) => transaction.chainID === targetChainId
-    );
+    return transactions.every((tx) => tx.chainID === targetChainId);
   }
 
   function formatEGLD(input: string, ticker: string) {
     return formatAmount({
-      input: input,
-      ticker: ticker,
+      input,
+      ticker,
       decimals: DECIMALS,
       digits: DIGITS,
     });

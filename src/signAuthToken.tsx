@@ -4,8 +4,9 @@ import {
 } from "@multiversx/sdk-core/out/core/message";
 import { Address } from "@multiversx/sdk-core/out/core/address";
 import { SignAuthTokenParams } from "./types/snapParam";
-import { panel, text, copyable, heading } from "@metamask/snaps-sdk";
 import { KeyOps } from "./operations/KeyOps";
+
+import { Box, Text, Heading, Copyable } from "@metamask/snaps-sdk/jsx";
 
 /**
  * @param tokenParam - The token to sign.
@@ -21,15 +22,17 @@ export const signAuthToken = async (
     method: "snap_dialog",
     params: {
       type: "confirmation",
-      content: panel([
-        heading("Connect to:"),
-        text(origin),
-        heading("Scam/phising verification"),
-        copyable(
-          "Double check the browser's address bar and confirm that you are indeed connecting to " +
-            origin
-        ),
-      ]),
+      content: (
+        <Box>
+          <Heading>Connect to:</Heading>
+          <Text>{origin}</Text>
+          <Heading>Scam/phishing verification</Heading>
+          <Copyable
+            value={`Double check the browser's address bar and confirm that you are
+            indeed connecting to ${origin}`}
+          />
+        </Box>
+      ),
     },
   });
 
