@@ -1,4 +1,5 @@
 import { Transaction } from "@multiversx/sdk-core/out/core/transaction";
+import { NftEnum } from "./nft.types";
 
 export interface MultiSignTransactionType {
   multiTxData?: string;
@@ -51,3 +52,15 @@ export interface TransactionDataTokenType {
   nonce?: string;
   multiTxData?: string;
 }
+
+export type SnapTransactionType = {
+  sender: string;
+  receiver: string;
+  data: string;
+  value?: string;
+  decimals?: number;
+  name?: string;
+  identifier?: string;
+  method: string;
+  type?: NftEnum | undefined;
+};
