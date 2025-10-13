@@ -1271,6 +1271,13 @@
   dependencies:
     bech32 "^2.0.0"
 
+"@multiversx/sdk-transaction-decoder@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@multiversx/sdk-transaction-decoder/-/sdk-transaction-decoder-2.0.0.tgz#ce06ba591700c2a8c04424e019b10dead6b44b1b"
+  integrity sha512-oltky2s02hHLk5zgzlgh1u7ngJRPnnpO/3mkm+FDiD6y6bzR1WMG7O/hWgJznFBuB+aY6wGYpnDrkzDXDJImcw==
+  dependencies:
+    bech32 "^2.0.0"
+
 "@noble/curves@1.4.2", "@noble/curves@1.8.1", "@noble/curves@^1.2.0", "@noble/curves@^1.8.1", "@noble/curves@~1.4.0":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.8.1.tgz#19bc3970e205c99e4bdb1c64a4785706bce497ff"

@@ -1,20 +1,16 @@
 import { NetworkType } from "./types/networkType";
 import { networks } from "./constants";
-import type { INetworkConfig } from "@multiversx/sdk-core/out/core/interfaces";
 import { ApiNetworkProvider } from "@multiversx/sdk-core/out/networkProviders/apiNetworkProvider";
 
-export const getNetworkConfig = async (
-  apiUrl: string
-): Promise<INetworkConfig | undefined> => {
+export const getNetworkProvider = (apiUrl: string): ApiNetworkProvider => {
   if (!apiUrl.startsWith("https://")) {
     throw new Error("Insecure connection protocol");
   }
 
   try {
     const networkProvider = new ApiNetworkProvider(apiUrl);
-    const networkConfig = await networkProvider.getNetworkConfig();
 
-    return networkConfig;
+    return networkProvider;
   } catch (error) {
     throw new Error("Failed to fetch network config");
   }
