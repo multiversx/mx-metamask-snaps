@@ -9,7 +9,7 @@ describe("onRpcRequest - signAuthToken", () => {
     const authToken =
       "aHR0cHM6Ly9teC10ZW1wbGF0ZS1kYXBwLnZlcmNlbC5hcHA.f587f5591b3c69848bee85aa8225d0030c3c3d77810b8bbebd48dbe55b24e819.86400.eyJ0aW1lc3RhbXAiOjE3MDQ1NDAzMjB9";
     const response = request({
-      origin: "http://localtest:8080",
+      origin: "https://localhost.multiversx.com",
       method: "mvx_signAuthToken",
       params: {
         token: authToken,
@@ -20,7 +20,7 @@ describe("onRpcRequest - signAuthToken", () => {
 
     const serial = serialiseUnknownContent(ui.content);
     expect(serial).toContain("Connect to:");
-    expect(serial).toContain("http://localtest:8080");
+    expect(serial).toContain("https://localhost.multiversx.com");
     expect(serial).toContain("Scam/phishing verification");
     expect(serial).toContain("Double check the browser's address bar");
 
@@ -37,7 +37,7 @@ describe("onRpcRequest - signAuthToken", () => {
     const authToken =
       "aHR0cHM6Ly9teC10ZW1wbGF0ZS1kYXBwLnZlcmNlbC5hcHA.f587f5591b3c69848bee85aa8225d0030c3c3d77810b8bbebd48dbe55b24e819.86400.eyJ0aW1lc3RhbXAiOjE3MDQ1NDAzMjB9";
     const response = request({
-      origin: "http://localtest:8080",
+      origin: "https://localhost.multiversx.com",
       method: "mvx_signAuthToken",
       params: {
         token: authToken,
@@ -48,7 +48,7 @@ describe("onRpcRequest - signAuthToken", () => {
 
     const serial = serialiseUnknownContent(ui.content);
     expect(serial).toContain("Connect to:");
-    expect(serial).toContain("http://localtest:8080");
+    expect(serial).toContain("https://localhost.multiversx.com");
     expect(serial).toContain("Scam/phishing verification");
     expect(serial).toContain("Double check the browser's address bar");
 

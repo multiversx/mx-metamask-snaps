@@ -7,6 +7,7 @@ describe("onRpcRequest - signMessage & basic RPCs", () => {
   it("Get public address", async () => {
     const { request } = await installSnap();
     const response = await request({
+      origin: "https://localhost.multiversx.com",
       method: "mvx_getAddress",
     });
 
@@ -18,6 +19,7 @@ describe("onRpcRequest - signMessage & basic RPCs", () => {
   it("Throws an error if the requested method does not exist", async () => {
     const { request } = await installSnap();
     const response = await request({
+      origin: "https://localhost.multiversx.com",
       method: "wrong_method",
     });
 
@@ -32,6 +34,7 @@ describe("onRpcRequest - signMessage & basic RPCs", () => {
     const { request } = await installSnap();
     const userMessage = "Jest unit test message !";
     const response = request({
+      origin: "https://localhost.multiversx.com",
       method: "mvx_signMessage",
       params: {
         message: userMessage,
@@ -57,6 +60,7 @@ describe("onRpcRequest - signMessage & basic RPCs", () => {
     const { request } = await installSnap();
     const userMessage = "Jest unit test message !";
     const response = request({
+      origin: "https://localhost.multiversx.com",
       method: "mvx_signMessage",
       params: {
         message: userMessage,

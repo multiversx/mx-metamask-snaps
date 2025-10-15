@@ -46,17 +46,6 @@ describe("onRpcRequest - signTransactions", () => {
         url: _apiUrl,
         config: mockNetworkConfig,
         getNetworkConfig: async () => mockNetworkConfig,
-        doGetGeneric: async (_path: string) => ({
-          name: "TOKEN",
-          identifier: "T-0",
-          decimals: 18,
-          type: "SemiFungibleESDT",
-        }),
-        getDefinitionOfFungibleToken: async (_identifier: string) => ({
-          name: "TOKEN",
-          identifier: "T-0",
-          decimals: 18,
-        }),
       }));
 
     const transactions = [
@@ -75,6 +64,7 @@ describe("onRpcRequest - signTransactions", () => {
     ];
 
     const response = request({
+      origin: "https://localhost.multiversx.com",
       method: "mvx_signTransactions",
       params: {
         transactions: transactions,
@@ -150,6 +140,7 @@ describe("onRpcRequest - signTransactions", () => {
     ];
 
     const response = request({
+      origin: "https://localhost.multiversx.com",
       method: "mvx_signTransactions",
       params: {
         transactions: transactions,
@@ -199,17 +190,6 @@ describe("onRpcRequest - signTransactions", () => {
         url: _apiUrl,
         config: mockNetworkConfig,
         getNetworkConfig: async () => mockNetworkConfig,
-        doGetGeneric: async (_path: string) => ({
-          name: "TOKEN",
-          identifier: "T-0",
-          decimals: 18,
-          type: "SemiFungibleESDT",
-        }),
-        getDefinitionOfFungibleToken: async (_identifier: string) => ({
-          name: "TOKEN",
-          identifier: "T-0",
-          decimals: 18,
-        }),
       }));
 
     const transactions = [
@@ -240,6 +220,7 @@ describe("onRpcRequest - signTransactions", () => {
     ];
 
     const response = request({
+      origin: "https://localhost.multiversx.com",
       method: "mvx_signTransactions",
       params: {
         transactions: transactions,
