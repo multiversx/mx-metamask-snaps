@@ -1,4 +1,4 @@
-import { SignTransactionsParams } from "./types/snapParam";
+import { SignTransactionsParams } from "../../types/snapParam";
 import type {
   INetworkConfig,
   IPlainTransactionObject,
@@ -6,20 +6,20 @@ import type {
 import { Transaction } from "@multiversx/sdk-core/out/core/transaction";
 import { TransactionComputer } from "@multiversx/sdk-core/out/core/transactionComputer";
 
-import { getNetworkProvider, getNetworkType } from "./network";
-import { KeyOps } from "./operations/KeyOps";
-import { formatAmount } from "./operations";
+import { getNetworkProvider, getNetworkType } from "../../network";
+import { KeyOps } from "../../operations/KeyOps";
+import { formatAmount } from "../../operations/formatAmount";
 
-import { TransactionsSummary } from "./TransactionsSummary";
+import { TransactionsSummary } from "../../components/TransactionsSummary";
 
 import {
   TransactionDecoder,
   TransactionMetadata,
   TransactionMetadataTransfer,
 } from "@multiversx/sdk-transaction-decoder/lib/src/transaction.decoder";
-import { decodeBase64 } from "./utils/decoder/base64Utils";
-import { parseMultiEsdtTransferData } from "./helpers/helpers/parseMultiEsdtTransferData";
-import { NftEnum } from "./types/nft.types";
+import { decodeBase64 } from "../../utils/decoder/base64Utils";
+import { parseMultiEsdtTransferData } from "../../helpers/parseMultiEsdtTransferData";
+import { NftEnum } from "../../types/nft.types";
 
 type TokenDetailsType = {
   value?: string;

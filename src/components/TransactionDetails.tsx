@@ -7,8 +7,8 @@ import {
   Address,
   Divider,
 } from "@metamask/snaps-sdk/jsx";
-import { NftEnum } from "./types/nft.types";
-import { formatAmount } from "./operations/formatAmount";
+import { NftEnum } from "../types/nft.types";
+import { formatAmount } from "../operations/formatAmount";
 
 type TransactionDetailsType = {
   receiver: string;

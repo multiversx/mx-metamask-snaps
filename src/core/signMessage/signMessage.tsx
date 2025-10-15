@@ -2,8 +2,8 @@ import {
   Message,
   MessageComputer,
 } from "@multiversx/sdk-core/out/core/message";
-import { SignMessageParams } from "./types/snapParam";
-import { KeyOps } from "./operations/KeyOps";
+import { SignMessageParams } from "../../types/snapParam";
+import { KeyOps } from "../../operations/KeyOps";
 import { Box, Heading, Text, Copyable, Divider } from "@metamask/snaps-sdk/jsx";
 
 /**

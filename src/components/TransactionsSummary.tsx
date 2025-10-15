@@ -2,9 +2,9 @@ import { Box, Section, Text, Image } from "@metamask/snaps-sdk/jsx";
 
 import { TransactionDetails } from "./TransactionDetails";
 import { INetworkProvider } from "@multiversx/sdk-core/out";
-import { NetworkType } from "./types/networkType";
-import { DECIMALS, EGLD_LOGO } from "./constants";
-import { SnapTransactionType } from "./types/transactions.types";
+import { NetworkType } from "../types/networkType";
+import { DECIMALS, EGLD_LOGO } from "../constants";
+import { SnapTransactionType } from "../types/transactions.types";
 
 interface TransactionSummaryProps {
   transactions: SnapTransactionType[];
