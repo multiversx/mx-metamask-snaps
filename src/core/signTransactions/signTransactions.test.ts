@@ -39,9 +39,8 @@ describe("onRpcRequest - signTransactions", () => {
   it("User agrees to sign a single transaction", async () => {
     const { request } = await installSnap();
 
-    const networkModule = await import("../../network");
     jest
-      .spyOn(networkModule, "getNetworkProvider")
+      .spyOn(network, "getNetworkProvider")
       .mockImplementation((_apiUrl: string): any => ({
         url: _apiUrl,
         config: mockNetworkConfig,
@@ -71,19 +70,20 @@ describe("onRpcRequest - signTransactions", () => {
       },
     });
 
-    const txUi = (await response.getInterface()) as SnapConfirmationInterface;
-    const serial = serialiseUnknownContent(txUi.content);
+    const uiResponse =
+      (await response.getInterface()) as SnapConfirmationInterface;
+    const content = serialiseUnknownContent(uiResponse.content);
 
-    expect(serial).toContain("To");
-    expect(serial).toContain(
+    expect(content).toContain("To");
+    expect(content).toContain(
       "erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh"
     );
-    expect(serial).toContain("Send");
-    expect(serial).toContain("Fee");
-    expect(serial).toContain("Data");
+    expect(content).toContain("Send");
+    expect(content).toContain("Fee");
+    expect(content).toContain("Data");
 
-    assert(txUi.type == "confirmation");
-    await txUi.ok();
+    assert(uiResponse.type == "confirmation");
+    await uiResponse.ok();
 
     expect(await response).toRespondWith([
       '{"nonce":1,"value":"1","receiver":"erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh","sender":"erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh","gasPrice":120000,"gasLimit":120000,"chainID":"D","version":1,"signature":"1e560e0a8d7b5251ed98ab67016f8513d5631a93e2a1273211acab47d18a48780b9b2f51dab53ddba1df6c311afb64845940a7c40d8e732af464ebf27a3a1b04"}',
@@ -99,17 +99,6 @@ describe("onRpcRequest - signTransactions", () => {
         url: _apiUrl,
         config: mockNetworkConfig,
         getNetworkConfig: async () => mockNetworkConfig,
-        doGetGeneric: async (_path: string) => ({
-          name: "TOKEN",
-          identifier: "T-0",
-          decimals: 18,
-          type: "SemiFungibleESDT",
-        }),
-        getDefinitionOfFungibleToken: async (_identifier: string) => ({
-          name: "TOKEN",
-          identifier: "T-0",
-          decimals: 18,
-        }),
       }));
 
     const transactions = [
@@ -147,32 +136,35 @@ describe("onRpcRequest - signTransactions", () => {
       },
     });
 
-    const txUiInitial =
+    const firstTxUI =
       (await response.getInterface()) as SnapConfirmationInterface;
-    const serialInitial = serialiseUnknownContent(txUiInitial.content);
-    expect(serialInitial).toContain("To");
-    expect(serialInitial).toContain(
+
+    const firstTxContent = serialiseUnknownContent(firstTxUI.content);
+    expect(firstTxContent).toContain("To");
+    expect(firstTxContent).toContain(
       "erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh"
     );
-    expect(serialInitial).toContain("Send");
-    expect(serialInitial).toContain("Fee");
-    expect(serialInitial).toContain("Data");
+    expect(firstTxContent).toContain("Send");
+    expect(firstTxContent).toContain("Fee");
+    expect(firstTxContent).toContain("Data");
 
-    assert(txUiInitial.type == "confirmation");
-    await txUiInitial.ok();
+    assert(firstTxUI.type == "confirmation");
+    await firstTxUI.ok();
 
-    const txUi2 = (await response.getInterface()) as SnapConfirmationInterface;
-    const serial2 = serialiseUnknownContent(txUi2.content);
-    expect(serial2).toContain("To");
-    expect(serial2).toContain(
+    const secondTxUI =
+      (await response.getInterface()) as SnapConfirmationInterface;
+
+    const secondTxContent = serialiseUnknownContent(secondTxUI.content);
+    expect(secondTxContent).toContain("To");
+    expect(secondTxContent).toContain(
       "erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh"
     );
-    expect(serial2).toContain("Send");
-    expect(serial2).toContain("Fee");
-    expect(serial2).toContain("Data");
+    expect(secondTxContent).toContain("Send");
+    expect(secondTxContent).toContain("Fee");
+    expect(secondTxContent).toContain("Data");
 
-    assert(txUi2.type == "confirmation");
-    await txUi2.cancel();
+    assert(secondTxUI.type == "confirmation");
+    await secondTxUI.cancel();
 
     expect(await response).toRespondWithError({
       code: -32603,
@@ -227,34 +219,35 @@ describe("onRpcRequest - signTransactions", () => {
       },
     });
 
-    const txUi3 = (await response.getInterface()) as SnapConfirmationInterface;
-    const serial3 = serialiseUnknownContent(txUi3.content);
-    expect(serial3).toContain("To");
-    expect(serial3).toContain(
+    const firstTxUI =
+      (await response.getInterface()) as SnapConfirmationInterface;
+    const firstTxContent = serialiseUnknownContent(firstTxUI.content);
+    expect(firstTxContent).toContain("To");
+    expect(firstTxContent).toContain(
       "erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh"
     );
-    expect(serial3).toContain("Send");
-    expect(serial3).toContain("Fee");
-    expect(serial3).toContain("Data");
+    expect(firstTxContent).toContain("Send");
+    expect(firstTxContent).toContain("Fee");
+    expect(firstTxContent).toContain("Data");
 
-    assert(txUi3.type == "confirmation");
-    await txUi3.ok();
+    assert(firstTxUI.type == "confirmation");
+    await firstTxUI.ok();
 
-    const finalUi2 =
+    const secondTxUI =
       (await response.getInterface()) as SnapConfirmationInterface;
 
-    const finalSerial = serialiseUnknownContent(finalUi2.content);
-    expect(finalSerial).toContain("To");
-    expect(finalSerial).toContain(
+    const secondTxContent = serialiseUnknownContent(secondTxUI.content);
+    expect(secondTxContent).toContain("To");
+    expect(secondTxContent).toContain(
       "erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh"
     );
-    expect(finalSerial).toContain("Send");
-    expect(finalSerial).toContain("xEGLD");
-    expect(finalSerial).toContain("Fee");
-    expect(finalSerial).toContain("Data");
+    expect(secondTxContent).toContain("Send");
+    expect(secondTxContent).toContain("xEGLD");
+    expect(secondTxContent).toContain("Fee");
+    expect(secondTxContent).toContain("Data");
 
-    assert(finalUi2.type == "confirmation");
-    await finalUi2.ok();
+    assert(secondTxUI.type == "confirmation");
+    await secondTxUI.ok();
 
     expect(await response).toRespondWith([
       '{"nonce":1,"value":"1","receiver":"erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh","sender":"erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh","gasPrice":120000,"gasLimit":120000,"chainID":"D","version":1,"signature":"1e560e0a8d7b5251ed98ab67016f8513d5631a93e2a1273211acab47d18a48780b9b2f51dab53ddba1df6c311afb64845940a7c40d8e732af464ebf27a3a1b04"}',

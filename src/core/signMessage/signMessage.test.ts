@@ -41,15 +41,16 @@ describe("onRpcRequest - signMessage & basic RPCs", () => {
       },
     });
 
-    const authUi = (await response.getInterface()) as SnapConfirmationInterface;
+    const uiResponse =
+      (await response.getInterface()) as SnapConfirmationInterface;
 
-    const serialMsg = serialiseUnknownContent(authUi.content);
+    const serialMsg = serialiseUnknownContent(uiResponse.content);
     expect(serialMsg).toContain("Message signing");
     expect(serialMsg).toContain("Message");
     expect(serialMsg).toContain(userMessage);
 
-    assert(authUi.type == "confirmation");
-    await authUi.ok();
+    assert(uiResponse.type == "confirmation");
+    await uiResponse.ok();
     const test = await response;
     expect(test).toRespondWith(
       "f017d929054153b165c4f591b64260f990d5836c9f0f5045d88eeeacd5263ec2a459723e826a5a2633a4a57f7d1e5892da22e7b49b6d6fb72455872e2af87e06"
@@ -67,16 +68,16 @@ describe("onRpcRequest - signMessage & basic RPCs", () => {
       },
     });
 
-    const authUi2 =
+    const uiResponse =
       (await response.getInterface()) as SnapConfirmationInterface;
 
-    const serialMsg2 = serialiseUnknownContent(authUi2.content);
+    const serialMsg2 = serialiseUnknownContent(uiResponse.content);
     expect(serialMsg2).toContain("Message signing");
     expect(serialMsg2).toContain("Message");
     expect(serialMsg2).toContain(userMessage);
 
-    expect(authUi2.type).toBe("confirmation");
-    await authUi2.cancel();
+    expect(uiResponse.type).toBe("confirmation");
+    await uiResponse.cancel();
 
     expect(await response).toRespondWithError({
       code: -32603,

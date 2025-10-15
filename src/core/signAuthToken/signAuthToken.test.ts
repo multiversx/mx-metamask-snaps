@@ -44,16 +44,17 @@ describe("onRpcRequest - signAuthToken", () => {
       },
     });
 
-    const ui = (await response.getInterface()) as SnapConfirmationInterface;
+    const uiResponse =
+      (await response.getInterface()) as SnapConfirmationInterface;
 
-    const serial = serialiseUnknownContent(ui.content);
+    const serial = serialiseUnknownContent(uiResponse.content);
     expect(serial).toContain("Connect to:");
     expect(serial).toContain("https://localhost.multiversx.com");
     expect(serial).toContain("Scam/phishing verification");
     expect(serial).toContain("Double check the browser's address bar");
 
-    expect(ui.type).toBe("confirmation");
-    await ui.cancel();
+    expect(uiResponse.type).toBe("confirmation");
+    await uiResponse.cancel();
 
     expect(await response).toRespondWithError({
       code: -32603,
