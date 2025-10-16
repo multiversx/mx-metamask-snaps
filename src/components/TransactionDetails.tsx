@@ -42,9 +42,7 @@ export const TransactionDetails = ({
     : formatAmount({
         input: String(value),
         decimals,
-        digits: 4,
         addCommas: true,
-        showLastNonZeroDecimal: false,
       });
 
   const amount = `${txValue} ${identifier ?? egldLabel}`;

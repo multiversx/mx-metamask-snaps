@@ -180,7 +180,7 @@ export function formatAmount({
   }
 
   return (
-    pipe(modInput as string)
+    pipe(modInput)
       // format
       .then(() => {
         const amountBN = new LocalBigNumber(modInput);

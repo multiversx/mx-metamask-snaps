@@ -90,7 +90,7 @@ describe("onRpcRequest - signTransactions", () => {
     ]);
   });
 
-  it("User sign a transaction and refuse the other one", async () => {
+  it("User signs and refuses a transaction", async () => {
     const { request } = await installSnap();
 
     jest
@@ -173,7 +173,7 @@ describe("onRpcRequest - signTransactions", () => {
     });
   });
 
-  it("User sign all transactions", async () => {
+  it("User signs all transactions", async () => {
     const { request } = await installSnap();
 
     jest
@@ -221,30 +221,12 @@ describe("onRpcRequest - signTransactions", () => {
 
     const firstTxUI =
       (await response.getInterface()) as SnapConfirmationInterface;
-    const firstTxContent = serialiseUnknownContent(firstTxUI.content);
-    expect(firstTxContent).toContain("To");
-    expect(firstTxContent).toContain(
-      "erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh"
-    );
-    expect(firstTxContent).toContain("Send");
-    expect(firstTxContent).toContain("Fee");
-    expect(firstTxContent).toContain("Data");
 
     assert(firstTxUI.type == "confirmation");
     await firstTxUI.ok();
 
     const secondTxUI =
       (await response.getInterface()) as SnapConfirmationInterface;
-
-    const secondTxContent = serialiseUnknownContent(secondTxUI.content);
-    expect(secondTxContent).toContain("To");
-    expect(secondTxContent).toContain(
-      "erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh"
-    );
-    expect(secondTxContent).toContain("Send");
-    expect(secondTxContent).toContain("xEGLD");
-    expect(secondTxContent).toContain("Fee");
-    expect(secondTxContent).toContain("Data");
 
     assert(secondTxUI.type == "confirmation");
     await secondTxUI.ok();

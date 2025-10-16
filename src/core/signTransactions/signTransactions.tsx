@@ -96,7 +96,6 @@ export const signTransactions = async (
 
     const txFees = formatAmount({
       input: fees,
-      showLastNonZeroDecimal: true,
     });
 
     const decodedData = decodeBase64(plainTx.data ?? "");
