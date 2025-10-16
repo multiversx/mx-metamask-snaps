@@ -318,7 +318,50 @@ describe("onRpcRequest - signTransactions", () => {
     assert(uiResponse.type == "confirmation");
     await uiResponse.ok();
 
-    const final = await response;
-    expect(final).toBeDefined();
+    const result = await response;
+    expect(result).toBeDefined();
+  });
+
+  it("User signs an NFT (ESDT) transfer transaction", async () => {
+    const { request } = await installSnap();
+
+    jest
+      .spyOn(network, "getNetworkProvider")
+      .mockImplementation((_apiUrl: string): any => ({
+        url: _apiUrl,
+        config: mockNetworkConfig,
+        getNetworkConfig: async () => mockNetworkConfig,
+      }));
+
+    const sftTx = {
+      chainID: "D",
+      data: "RVNEVFRyYW5zZmVyQDQyNTU0NzQxNTQ1NDQ5NTMyZDY0Mzc2NTM5MzgzNTJkMzAzMUAwMQ==",
+      gasLimit: 428000,
+      gasPrice: 1000000000,
+      nonce: 0,
+      receiver:
+        "erd1xysfz4f7hkc4qchshzqky3d4pjet0geuxhgx6tlzt4thdz4m6euq63r83y",
+      sender: "erd1xysfz4f7hkc4qchshzqky3d4pjet0geuxhgx6tlzt4thdz4m6euq63r83y",
+      value: "0",
+      version: 2,
+    };
+
+    const response = request({
+      origin: "https://localhost.multiversx.com",
+      method: "mvx_signTransactions",
+      params: { transactions: [sftTx] },
+    });
+
+    const uiResponse = await response.getInterface();
+    const content = serialiseUnknownContent(uiResponse.content);
+
+    expect(content).toContain("1 BUGATTIS-d7e985-01");
+    expect(content).toContain("SFT");
+
+    assert(uiResponse.type == "confirmation");
+    await uiResponse.ok();
+
+    const result = await response;
+    expect(result).toBeDefined();
   });
 });
