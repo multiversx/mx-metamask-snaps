@@ -376,7 +376,7 @@ describe("onRpcRequest - signTransactions", () => {
         getNetworkConfig: async () => mockNetworkConfig,
       }));
 
-    const sftTx = {
+    const nftTx = {
       chainID: "D",
       data: "RVNEVFRyYW5zZmVyQDQ0NTI0YjJkMzM2NTMxMzQzOTM4MmQzMDM2QDAx",
       gasLimit: 413000,
@@ -392,7 +392,7 @@ describe("onRpcRequest - signTransactions", () => {
     const response = request({
       origin: "https://localhost.multiversx.com",
       method: "mvx_signTransactions",
-      params: { transactions: [sftTx] },
+      params: { transactions: [nftTx] },
     });
 
     const uiResponse = await response.getInterface();
