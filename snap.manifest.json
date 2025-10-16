@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Snap connector to MultiversX chain.",
   "proposedName": "MultiversX",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/multiversx/mx-metamask-snaps.git"
   },
   "source": {
-    "shasum": "WTPr4mhp+GzS7+jXQFRYx/uXfCAYfhbBVHLBpi7maTw=",
+    "shasum": "sPVFFV61+JZgNGCrtIPHMygOw9kwgjepkNJSjWFivKQ=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
