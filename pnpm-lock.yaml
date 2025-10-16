@@ -64,6 +64,9 @@ importers:
       '@metamask/snaps-jest':
         specifier: 9.4.0
         version: 9.4.0(@babel/runtime@7.28.4)(@metamask/approval-controller@7.2.0)(@metamask/snaps-execution-environments@10.2.2(@babel/runtime@7.28.4)(@metamask/approval-controller@7.2.0)(webextension-polyfill@0.12.0))(webextension-polyfill@0.12.0)
+      '@metamask/snaps-utils':
+        specifier: 11.6.0
+        version: 11.6.0(@babel/runtime@7.28.4)(@metamask/approval-controller@7.2.0)(webextension-polyfill@0.12.0)
       '@types/jest':
         specifier: 29.5.11
         version: 29.5.11
