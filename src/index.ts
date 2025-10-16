@@ -8,6 +8,7 @@ import { getAddress } from "./helpers/getAddress";
 import { signTransactions } from "./core/signTransactions/signTransactions";
 import { signMessage } from "./core/signMessage/signMessage";
 import { signAuthToken } from "./core/signAuthToken/signAuthToken";
+import { SnapRequests } from "./constants";
 
 export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
@@ -18,19 +19,19 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   }
 
   switch (request.method) {
-    case "mvx_getAddress":
+    case SnapRequests.GET_ADDRESS:
       return getAddress();
 
-    case "mvx_signTransactions": {
+    case SnapRequests.SIGN_TRANSACTIONS: {
       const signTransactionParam =
         request?.params as unknown as SignTransactionsParams;
       return signTransactions(signTransactionParam);
     }
-    case "mvx_signMessage": {
+    case SnapRequests.SIGN_MESSAGE: {
       const snapParams = request?.params as unknown as SignMessageParams;
       return signMessage(snapParams);
     }
-    case "mvx_signAuthToken": {
+    case SnapRequests.SIGN_TOKEN: {
       const signTokenParams = request?.params as unknown as SignAuthTokenParams;
       return signAuthToken(origin, signTokenParams);
     }
