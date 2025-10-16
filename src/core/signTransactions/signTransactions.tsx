@@ -62,21 +62,29 @@ export const signTransactions = async (
     throw new Error("Cannot retrieve the network configuration from the API.");
   }
 
-  const transactionsSigned: string[] = [];
+  const signedTransactions: string[] = [];
 
-  for (const transactionPlain of transactionsParam.transactions) {
-    const transaction = Transaction.newFromPlainObject(transactionPlain);
+  for (const plainTransaction of transactionsParam.transactions) {
+    const transaction = Transaction.newFromPlainObject(plainTransaction);
 
-    await processTransaction(transaction, networkConfig, transactionsSigned);
+    await processTransaction({
+      transaction,
+      networkConfig,
+      signedTransactions,
+    });
   }
 
-  return transactionsSigned;
+  return signedTransactions;
 
-  async function processTransaction(
-    transaction: Transaction,
-    networkConfig: INetworkConfig,
-    transactionsSigned: string[]
-  ) {
+  async function processTransaction({
+    transaction,
+    networkConfig,
+    signedTransactions,
+  }: {
+    transaction: Transaction;
+    networkConfig: INetworkConfig;
+    signedTransactions: string[];
+  }) {
     const keyOps = new KeyOps();
 
     const txComputer = new TransactionComputer();
@@ -118,7 +126,7 @@ export const signTransactions = async (
     );
 
     transaction.signature = transactionSignature;
-    transactionsSigned.push(JSON.stringify(transaction.toPlainObject()));
+    signedTransactions.push(JSON.stringify(transaction.toPlainObject()));
   }
 
   async function showConfirmationDialog({
