@@ -142,7 +142,7 @@ export const signTransactions = async (
       throw new Error(`Cannot identify the network with chainId ${chainId}.`);
     }
 
-    const snapTransactions = await getSnapTransactions(metadata, data);
+    const snapTransactions = await getSnapTransactions({ metadata, data });
 
     return snap.request({
       method: "snap_dialog",
@@ -158,10 +158,13 @@ export const signTransactions = async (
     });
   }
 
-  async function getSnapTransactions(
-    metadata: TransactionMetadata,
-    data: string
-  ) {
+  async function getSnapTransactions({
+    metadata,
+    data,
+  }: {
+    metadata: TransactionMetadata;
+    data: string;
+  }) {
     const transaction = {
       sender: metadata.sender,
       receiver: metadata.receiver,
