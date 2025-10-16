@@ -1,4 +1,4 @@
-import { SnapConfirmationInterface, installSnap } from "@metamask/snaps-jest";
+import { installSnap } from "@metamask/snaps-jest";
 import { expect } from "@jest/globals";
 import { assert } from "@metamask/snaps-sdk";
 import { serialiseUnknownContent } from "../../utils/testUtils";
@@ -70,8 +70,7 @@ describe("onRpcRequest - signTransactions", () => {
       },
     });
 
-    const uiResponse =
-      (await response.getInterface()) as SnapConfirmationInterface;
+    const uiResponse = await response.getInterface();
     const content = serialiseUnknownContent(uiResponse.content);
 
     expect(content).toContain("To");
@@ -136,8 +135,7 @@ describe("onRpcRequest - signTransactions", () => {
       },
     });
 
-    const firstTxUI =
-      (await response.getInterface()) as SnapConfirmationInterface;
+    const firstTxUI = await response.getInterface();
 
     const firstTxContent = serialiseUnknownContent(firstTxUI.content);
     expect(firstTxContent).toContain("To");
@@ -151,8 +149,7 @@ describe("onRpcRequest - signTransactions", () => {
     assert(firstTxUI.type == "confirmation");
     await firstTxUI.ok();
 
-    const secondTxUI =
-      (await response.getInterface()) as SnapConfirmationInterface;
+    const secondTxUI = await response.getInterface();
 
     const secondTxContent = serialiseUnknownContent(secondTxUI.content);
     expect(secondTxContent).toContain("To");
@@ -219,14 +216,12 @@ describe("onRpcRequest - signTransactions", () => {
       },
     });
 
-    const firstTxUI =
-      (await response.getInterface()) as SnapConfirmationInterface;
+    const firstTxUI = await response.getInterface();
 
     assert(firstTxUI.type == "confirmation");
     await firstTxUI.ok();
 
-    const secondTxUI =
-      (await response.getInterface()) as SnapConfirmationInterface;
+    const secondTxUI = await response.getInterface();
 
     assert(secondTxUI.type == "confirmation");
     await secondTxUI.ok();
@@ -235,5 +230,51 @@ describe("onRpcRequest - signTransactions", () => {
       '{"nonce":1,"value":"1","receiver":"erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh","sender":"erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh","gasPrice":120000,"gasLimit":120000,"chainID":"D","version":1,"signature":"1e560e0a8d7b5251ed98ab67016f8513d5631a93e2a1273211acab47d18a48780b9b2f51dab53ddba1df6c311afb64845940a7c40d8e732af464ebf27a3a1b04"}',
       '{"nonce":2,"value":"2","receiver":"erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh","sender":"erd1elfck5guq2akmdee9p6lwv6wa8cuf250fajmff99kpu3vhgcnjlqs8radh","gasPrice":120000,"gasLimit":120000,"chainID":"D","version":1,"signature":"0a6304b7ffd8abde379432572567b9203e150482e028c7b568ab8b0cb603ba136f4a8bb6ba69ed5386c423fd77915fbfbd81e462bfb918c9808fa83b399a820d"}',
     ]);
+  });
+
+  it("User signs a multi transfer transaction", async () => {
+    const { request } = await installSnap();
+
+    jest
+      .spyOn(network, "getNetworkProvider")
+      .mockImplementation((_apiUrl: string): any => ({
+        url: _apiUrl,
+        config: mockNetworkConfig,
+        getNetworkConfig: async () => mockNetworkConfig,
+      }));
+
+    const multiTransferTx = {
+      chainID: "D",
+      data: "TXVsdGlFU0RUTkZUVHJhbnNmZXJAMDAwMDAwMDAwMDAwMDAwMDA1MDBkZWJhZGQxODcwOTMwZGZjMzcwOTQ4MzI3NzUwZWIxODczODc5Nzg4MmZlOEAwMkA1NzQ1NDc0YzQ0MmQ2MTMyMzg2MzM1MzlAQDA2ZjA1YjU5ZDNiMjAwMDBANTU1MzQ0NDMyZDMzMzUzMDYzMzQ2NUBAMGY0MjQw",
+      gasLimit: 1493000,
+      gasPrice: 1000000000,
+      nonce: 0,
+      receiver:
+        "erd1xysfz4f7hkc4qchshzqky3d4pjet0geuxhgx6tlzt4thdz4m6euq63r83y",
+      sender: "erd1xysfz4f7hkc4qchshzqky3d4pjet0geuxhgx6tlzt4thdz4m6euq63r83y",
+      value: "0",
+      version: 2,
+    };
+
+    const response = request({
+      origin: "https://localhost.multiversx.com",
+      method: "mvx_signTransactions",
+      params: { transactions: [multiTransferTx] },
+    });
+
+    const uiResponse = await response.getInterface();
+    const content = serialiseUnknownContent(uiResponse.content);
+
+    expect(content).toContain("1 USDC-350c4e");
+    expect(content).toContain("0.5 WEGLD-a28c59");
+    // Check if two send fields exist
+    const sendCount = (content.match(/Row label="Send"/g) || []).length;
+    expect(sendCount).toBe(2);
+
+    assert(uiResponse.type == "confirmation");
+    await uiResponse.ok();
+
+    const result = await response;
+    expect(result).toBeDefined();
   });
 });
