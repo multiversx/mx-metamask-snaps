@@ -7,4 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [[2.0.0](https://github.com/multiversx/mx-metamask-snaps/pull/9)] - 2025-10-16
+
 - [Upgrade packages to LTS and add transaction interpreter](https://github.com/multiversx/mx-metamask-snaps/pull/6)
