@@ -266,7 +266,6 @@ describe("onRpcRequest - signTransactions", () => {
     const uiResponse = await response.getInterface();
     const content = serialiseUnknownContent(uiResponse.content);
 
-    console.log({ content });
     expect(content).toContain("1 USDC-350c4e");
     expect(content).toContain("0.5 WEGLD-a28c59");
     // Check if two send fields exist
