@@ -245,6 +245,7 @@ describe("onRpcRequest - signTransactions", () => {
 
     const multiTransferTx = {
       chainID: "D",
+      //MultiESDTNFTTransfer@00000000000000000500debadd1870930dfc370948327750eb18738797882fe8@02@5745474c442d613238633539@@06f05b59d3b20000@555344432d333530633465@@0f4240
       data: "TXVsdGlFU0RUTkZUVHJhbnNmZXJAMDAwMDAwMDAwMDAwMDAwMDA1MDBkZWJhZGQxODcwOTMwZGZjMzcwOTQ4MzI3NzUwZWIxODczODc5Nzg4MmZlOEAwMkA1NzQ1NDc0YzQ0MmQ2MTMyMzg2MzM1MzlAQDA2ZjA1YjU5ZDNiMjAwMDBANTU1MzQ0NDMyZDMzMzUzMDYzMzQ2NUBAMGY0MjQw",
       gasLimit: 1493000,
       gasPrice: 1000000000,
@@ -265,6 +266,7 @@ describe("onRpcRequest - signTransactions", () => {
     const uiResponse = await response.getInterface();
     const content = serialiseUnknownContent(uiResponse.content);
 
+    console.log({ content });
     expect(content).toContain("1 USDC-350c4e");
     expect(content).toContain("0.5 WEGLD-a28c59");
     // Check if two send fields exist
@@ -291,6 +293,7 @@ describe("onRpcRequest - signTransactions", () => {
 
     const metaEsdtTx = {
       chainID: "D",
+      //ESDTTransfer@584d45582d383266326634@0de0b6b3a7640000
       data: "RVNEVFRyYW5zZmVyQDU4NGQ0NTU4MmQzODMyNjYzMjY2MzRAMGRlMGI2YjNhNzY0MDAwMA==",
       gasLimit: 428000,
       gasPrice: 1000000000,
@@ -335,6 +338,7 @@ describe("onRpcRequest - signTransactions", () => {
 
     const sftTx = {
       chainID: "D",
+      //ESDTTransfer@42554741545449532d6437653938352d3031@01
       data: "RVNEVFRyYW5zZmVyQDQyNTU0NzQxNTQ1NDQ5NTMyZDY0Mzc2NTM5MzgzNTJkMzAzMUAwMQ==",
       gasLimit: 428000,
       gasPrice: 1000000000,
@@ -378,6 +382,7 @@ describe("onRpcRequest - signTransactions", () => {
 
     const nftTx = {
       chainID: "D",
+      //ESDTTransfer@44524b2d3365313439382d3036@01
       data: "RVNEVFRyYW5zZmVyQDQ0NTI0YjJkMzM2NTMxMzQzOTM4MmQzMDM2QDAx",
       gasLimit: 413000,
       gasPrice: 1000000000,
