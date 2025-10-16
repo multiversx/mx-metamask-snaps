@@ -18,7 +18,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,17 +26,19 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org/
 
-      - name: Setup yarn
-        run: npm install -g yarn
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Run tests
-        run: yarn test
+        run: pnpm test
 
       - name: Build package
-        run: yarn build:package
+        run: pnpm build:package
 
       - name: Publish to npmjs
         env:
