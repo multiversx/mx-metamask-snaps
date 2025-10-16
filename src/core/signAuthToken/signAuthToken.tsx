@@ -3,8 +3,8 @@ import {
   MessageComputer,
 } from "@multiversx/sdk-core/out/core/message";
 import { Address } from "@multiversx/sdk-core/out/core/address";
-import { SignAuthTokenParams } from "./types/snapParam";
-import { KeyOps } from "./operations/KeyOps";
+import { SignAuthTokenParams } from "../../types/snapParam";
+import { KeyOps } from "../../operations/KeyOps";
 
 import { Box, Text, Heading, Copyable } from "@metamask/snaps-sdk/jsx";
 
@@ -28,8 +28,7 @@ export const signAuthToken = async (
           <Text>{origin}</Text>
           <Heading>Scam/phishing verification</Heading>
           <Copyable
-            value={`Double check the browser's address bar and confirm that you are
-            indeed connecting to ${origin}`}
+            value={`Double check the browser's address bar and confirm that you are indeed connecting to ${origin}`}
           />
         </Box>
       ),

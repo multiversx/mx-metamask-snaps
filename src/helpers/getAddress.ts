@@ -1,4 +1,4 @@
-import { KeyOps } from "./operations/KeyOps";
+import { KeyOps } from "../operations/KeyOps";
 
 /**
  * This wallet uses a single account/address.

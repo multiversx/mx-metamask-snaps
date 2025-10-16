@@ -7,8 +7,8 @@ import {
   Address,
   Divider,
 } from "@metamask/snaps-sdk/jsx";
-import { NftEnum } from "./types/nft.types";
-import { formatAmount } from "./operations/formatAmount";
+import { NftEnum } from "../types/nft.types";
+import { formatAmount } from "../operations/formatAmount";
 
 type TransactionDetailsType = {
   receiver: string;
@@ -42,9 +42,7 @@ export const TransactionDetails = ({
     : formatAmount({
         input: String(value),
         decimals,
-        digits: 4,
         addCommas: true,
-        showLastNonZeroDecimal: false,
       });
 
   const amount = `${txValue} ${identifier ?? egldLabel}`;

@@ -37,7 +37,7 @@
   },
   "resolutions": {
     "@noble/curves": "1.8.1",
-    "@noble/hashes": "1.8.0"
+    "@noble/hashes": "1.4.0"
   },
   "dependencies": {
     "@metamask/snaps-sdk": "9.3.0",
