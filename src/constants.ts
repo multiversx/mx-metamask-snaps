@@ -29,3 +29,10 @@ export const networks: NetworkType[] = [
     apiAddress: "https://api.multiversx.com",
   },
 ];
+
+export enum SnapRequests {
+  GET_ADDRESS = "mvx_getAddress",
+  SIGN_TRANSACTIONS = "mvx_signTransactions",
+  SIGN_MESSAGE = "mvx_signMessage",
+  SIGN_TOKEN = "mvx_signAuthToken",
+}

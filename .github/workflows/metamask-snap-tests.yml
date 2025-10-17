@@ -1,21 +1,13 @@
-name: Publish sdk-metamask-snap-provider
-
+name: Run Metamask Snap Tests
 on:
   push:
-    branches: [main]
-  repository_dispatch:
-    types: publish-npm
+    branches: [development]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  publish-npm:
+  test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,7 +16,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://registry.npmjs.org/
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -39,8 +30,3 @@ jobs:
 
       - name: Run tests
         run: pnpm test
-
-      - name: Publish to npmjs
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish

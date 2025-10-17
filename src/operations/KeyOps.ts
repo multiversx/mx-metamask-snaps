@@ -1,5 +1,5 @@
 import { SLIP10Node, JsonSLIP10Node } from "@metamask/key-tree";
-import { UserSecretKey } from "@multiversx/sdk-wallet/out";
+import { UserSecretKey } from "@multiversx/sdk-core/out/wallet/userKeys";
 
 export class KeyOps {
   /**
@@ -21,10 +21,10 @@ export class KeyOps {
       throw new Error("Cannot retrieve the private key");
     }
 
-    const userSecret = new UserSecretKey(node.privateKeyBytes as Uint8Array);
+    const userSecret = new UserSecretKey(node.privateKeyBytes);
 
     return {
-      publicKey: userSecret.generatePublicKey().toAddress().bech32(),
+      publicKey: userSecret.generatePublicKey().toAddress().toBech32(),
       userSecret: userSecret,
     };
   }
@@ -34,13 +34,19 @@ export class KeyOps {
     return publicKey;
   }
 
-  public async getMessageSignature(message: Buffer) {
+  public async getMessageSignature(message: Uint8Array<ArrayBufferLike>) {
     const { userSecret } = await this.getKeyPair();
-    return userSecret.sign(message).toString("hex");
+    const signature = userSecret.sign(message);
+
+    return Buffer.from(signature).toString("hex");
   }
 
-  public async getTransactionSignature(serializedTransaction: Buffer) {
+  public async getTransactionSignature(
+    serializedTransaction: Uint8Array<ArrayBufferLike>
+  ) {
     const { userSecret } = await this.getKeyPair();
-    return userSecret.sign(serializedTransaction);
+    const signature = userSecret.sign(serializedTransaction);
+
+    return signature;
   }
 }
